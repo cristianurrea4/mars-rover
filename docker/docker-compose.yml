@@ -1,0 +1,37 @@
+version: '3.8' # Versión del archivo docker-compose
+
+services:
+
+  php:
+    build: ./docker/php # Ruta al Dockerfile personalizado de PHP
+    container_name: mars_php # Nombre del contenedor
+    working_dir: /var/www # Carpeta de trabajo interna del contenedor
+    volumes:
+      - ./backend:/var/www # Sincroniza tu carpeta local con la del contenedor
+    ports:
+      - "9000:9000" # Abre el puerto 9000 para PHP (FastCGI si usamos Nginx)
+    depends_on:
+      - node # Espera a que el contenedor node esté listo antes de iniciar
+
+  node:
+    image: node:18                   # Imagen oficial de Node.js v18
+    container_name: mars_node        # Nombre del contenedor
+    working_dir: /app                # Carpeta de trabajo
+    volumes:
+      - ./frontend:/app             # Sincroniza Vue local con contenedor
+    command: sh -c "npm install && npm run dev"  # Comando que ejecuta el servidor de desarrollo
+    ports:
+      - "5173:5173"                 # Puerto donde corre Vite (el dev server de Vue 3)
+
+  nginx:
+    image: nginx:alpine                          # Imagen ligera de Nginx
+    container_name: mars_nginx
+    ports:
+      - "8080:80"                                 # Acceso desde localhost:8080
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf  # Config personalizada
+      - ./backend:/var/www                       # Código PHP
+      - ./frontend/dist:/usr/share/nginx/html    # Vue compilado (build)
+    depends_on:
+      - php
+
