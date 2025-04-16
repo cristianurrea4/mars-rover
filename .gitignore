@@ -1,11 +1,24 @@
+# Node.js dependencies
 node_modules/
-vendor/
-.env
-.htaccess
-.vscode
 
-# Logs
-logs
+# PHP dependencies
+vendor/
+
+# Archivo de configuración sensible
+.env
+
+# Subir el archivo de ejemplo de entorno
+!.env.example
+
+# Configuración del servidor web (si no es necesario)
+.htaccess
+
+# Archivos de configuración del editor (Visual Studio Code y otros IDEs)
+.vscode/
+.idea/
+
+# Archivos de logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -13,16 +26,22 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Archivos del sistema (MacOS, Linux, etc.)
 .DS_Store
-dist
-dist-ssr
-coverage
+
+# Archivos de construcción y distribución
+dist/
+dist-ssr/
+coverage/
+
+# Archivos locales de configuración
 *.local
 
-/cypress/videos/
-/cypress/screenshots/
+# Cypress (si no usas Cypress en producción)
+cypress/videos/
+cypress/screenshots/
 
-# Editor directories and files
+# Archivos de configuraciones de IDE o proyectos
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -32,7 +51,11 @@ coverage
 *.sln
 *.sw?
 
+# Archivos de TypeScript
 *.tsbuildinfo
 
-# Cache
+# Cache de PHPUnit
 .phpunit.result.cache
+
+# Archivos de Docker (solo si tienes ficheros temporales generados)
+**/*.log
