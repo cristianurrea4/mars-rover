@@ -1,6 +1,8 @@
 node_modules/
 vendor/
 .env
+.htaccess
+.vscode
 
 # Logs
 logs
