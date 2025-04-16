@@ -1,23 +1,36 @@
 <?php
+require_once __DIR__ . '/../Rover.php';
+require_once __DIR__ . '/../Grid.php';
+
+use App\Rover;
+use App\Grid;
 
 class ApiController {
-    // Obtener datos (GET)
-    public static function getData() {
-        // Simula obtener datos (puedes reemplazarlo con la lógica de base de datos)
-        echo json_encode(['message' => 'Datos obtenidos correctamente']);
+
+    public function moveRover($direction) {
+        $grid = new Grid();
+
+        if (isset($_SESSION['rover'])) {
+            $roverData = $_SESSION['rover'];
+            $rover = new Rover($roverData['x'], $roverData['y'], $roverData['orientation']);
+        } else {
+            $rover = new Rover(); 
+        }
+
+        try {
+            $rover->move($direction, $grid);
+            $_SESSION['rover'] = $rover->getPosition();
+            return $rover->getPosition();
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
     }
 
-    // Insertar datos (POST)
-    public static function postData() {
-        // Recibe los datos en formato JSON
-        $data = json_decode(file_get_contents('php://input'), true);
-        
-        if (!isset($data['name'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Falta el campo "name"']);
-            return;
+    public function getRoverPosition() {
+        if (isset($_SESSION['rover'])) {
+            return $_SESSION['rover'];
+        } else {
+            return (new Rover())->getPosition();
         }
-        
-        echo json_encode(['message' => 'Datos guardados correctamente']);
     }
 }

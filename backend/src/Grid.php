@@ -2,32 +2,16 @@
 
 namespace App;
 
-class Grid
-{
-    private int $width;
-    private int $height;
-    private array $obstacles;
+class Grid {
+    private $width;
+    private $height;
 
-    public function __construct(int $width = 200, int $height = 200, array $obstacles = [])
-    {
+    public function __construct($width = 5, $height = 5) {
         $this->width = $width;
         $this->height = $height;
-        $this->obstacles = $obstacles;
     }
 
-    public function hasObstacle(int $x, int $y): bool
-    {
-        foreach ($this->obstacles as $obs) {
-            if ($obs['x'] === $x && $obs['y'] === $y) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function wrapCoordinates(int &$x, int &$y): void
-    {
-        $x = ($x + $this->width) % $this->width;
-        $y = ($y + $this->height) % $this->height;
+    public function isPositionValid($x, $y) {
+        return $x >= 0 && $x < $this->width && $y >= 0 && $y < $this->height;
     }
 }

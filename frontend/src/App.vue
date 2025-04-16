@@ -1,9 +1,8 @@
 <script setup>
-import Home from './components/Home.vue'
 </script>
 <template>
-  <main>
-     <Home />
-  </main>
+  <div id="app">
+    <router-link to="/control-rover">Control del Rover</router-link>
+    <router-view></router-view>
+  </div>
 </template>
-

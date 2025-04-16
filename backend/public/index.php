@@ -1,19 +1,17 @@
 <?php
-// Configurar el encabezado para permitir solicitudes desde cualquier origen (CORS)
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');  // O puedes restringir a tu dominio frontend: http://localhost:8080
+session_start();
 
-// Aquí se cargan las rutas de la API
-require_once '../src/ApiController.php';
+require_once '../src/controllers/ApiController.php';
 
-$method = $_SERVER['REQUEST_METHOD']; // Obtiene el tipo de solicitud (GET, POST, PUT, DELETE)
+$apiController = new ApiController();
 
-// Enrutamiento básico
-if ($method == 'GET') {
-    ApiController::getData();
-} elseif ($method == 'POST') {
-    ApiController::postData();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['command'])) {
+    $command = $_GET['command'];
+    $result = $apiController->moveRover($command);
+    echo json_encode($result ?: ['error' => 'No se pudo mover el rover.']);
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['command']) && $_GET['command'] === 'GET') {
+    $result = $apiController->getRoverPosition();
+    echo json_encode($result);
 } else {
-    http_response_code(405); // Método no permitido
-    echo json_encode(['error' => 'Método no permitido']);
+    echo json_encode(['error' => 'Método no permitido o parámetro incompleto.']);
 }

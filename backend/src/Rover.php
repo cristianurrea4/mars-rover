@@ -2,87 +2,69 @@
 
 namespace App;
 
-class Rover
-{
-    private int $x;
-    private int $y;
-    private string $direction;
-    private Grid $grid;
+class Rover {
+    private $x;
+    private $y;
+    private $orientation;
 
-    private array $directions = ['N', 'E', 'S', 'W'];
-
-    public function __construct(int $x, int $y, string $direction, Grid $grid)
-    {
+    // Orientación: Norte (N), Este (E), Sur (S), Oeste (W)
+    public function __construct($x = 0, $y = 0, $orientation = 'N') {
         $this->x = $x;
         $this->y = $y;
-        $this->direction = strtoupper($direction);
-        $this->grid = $grid;
+        $this->orientation = $orientation;
     }
 
-    public function executeCommands(string $commands): array
-    {
-        $commands = strtoupper($commands);
-        for ($i = 0; $i < strlen($commands); $i++) {
-            $command = $commands[$i];
-            if ($command === 'L') {
+    // Método para mover el rover
+    public function move($direction, $grid) {
+        switch ($direction) {
+            case 'M': // Mover adelante
+                $this->moveForward($grid);
+                break;
+            case 'L': // Girar a la izquierda
                 $this->turnLeft();
-            } elseif ($command === 'R') {
+                break;
+            case 'R': // Girar a la derecha
                 $this->turnRight();
-            } elseif ($command === 'F') {
-                if (!$this->moveForward()) {
-                    return [
-                        'status' => 'obstacle',
-                        'x' => $this->x,
-                        'y' => $this->y,
-                        'direction' => $this->direction
-                    ];
-                }
-            }
+                break;
         }
 
-        return [
-            'status' => 'ok',
-            'x' => $this->x,
-            'y' => $this->y,
-            'direction' => $this->direction
-        ];
-    }
-
-    private function turnLeft(): void
-    {
-        $index = array_search($this->direction, $this->directions);
-        $this->direction = $this->directions[($index + 3) % 4];
-    }
-
-    private function turnRight(): void
-    {
-        $index = array_search($this->direction, $this->directions);
-        $this->direction = $this->directions[($index + 1) % 4];
-    }
-
-    private function moveForward(): bool
-    {
-        $dx = 0;
-        $dy = 0;
-
-        switch ($this->direction) {
-            case 'N': $dy = 1; break;
-            case 'S': $dy = -1; break;
-            case 'E': $dx = 1; break;
-            case 'W': $dx = -1; break;
+        // Verifica que la nueva posición sea válida
+        if (!$grid->isPositionValid($this->x, $this->y)) {
+            throw new \Exception("Posición fuera de los límites del mapa");
         }
+    }
 
-        $newX = $this->x + $dx;
-        $newY = $this->y + $dy;
-
-        $this->grid->wrapCoordinates($newX, $newY);
-
-        if ($this->grid->hasObstacle($newX, $newY)) {
-            return false;
+    // Método para mover hacia adelante
+    private function moveForward($grid) {
+        // Guardar la posición anterior para restaurarla si la nueva posición es inválida
+        $prevX = $this->x;
+        $prevY = $this->y;
+        switch ($this->orientation) {
+            case 'N': $this->y++; break;
+            case 'S': $this->y--; break;
+            case 'E': $this->x++; break;
+            case 'W': $this->x--; break;
         }
+       
+        // Verifica si la nueva posición es válida
+        if (!$grid->isPositionValid($this->x, $this->y)) {
+            echo json_decode("entro");
+            // Restaurar la posición anterior si la nueva es inválida
+            $this->x = $prevX;
+            $this->y = $prevY;
+        }
+    }
 
-        $this->x = $newX;
-        $this->y = $newY;
-        return true;
+    private function turnLeft() {
+        $this->orientation = $this->orientation === 'N' ? 'W' : ($this->orientation === 'W' ? 'S' : ($this->orientation === 'S' ? 'E' : 'N'));
+    }
+
+    private function turnRight() {
+        $this->orientation = $this->orientation === 'N' ? 'E' : ($this->orientation === 'E' ? 'S' : ($this->orientation === 'S' ? 'W' : 'N'));
+    }
+
+    public function getPosition() {
+        return ['x' => $this->x, 'y' => $this->y, 'orientation' => $this->orientation];
     }
 }
+

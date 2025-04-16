@@ -1,17 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
+import RoverControl from '../components/RoverControl/RoverControl.vue';
 
+// Usa la variable de entorno definida en .env
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home,
-  },
+    {
+        path: '/control-rover',
+        name: 'ControlRover',
+        component: RoverControl
+    }
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
+    // Aquí usamos la variable de entorno VITE_BASE_URL
+    history: createWebHistory(import.meta.env.VITE_BASE_URL),
+    routes
 });
 
 export default router;
