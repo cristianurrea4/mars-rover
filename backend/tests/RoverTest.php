@@ -10,26 +10,50 @@ class RoverTest extends TestCase
 {
     public function testSimpleMovementWithoutObstacle()
     {
-        $grid = new Grid();
-        $rover = new Rover(0, 0, 'N', $grid);
+        // Creamos una grilla sin obstáculos
+        $grid = new Grid(5, 5);
+        $rover = new Rover(0, 0, 'N');
 
-        $result = $rover->executeCommands('FFRFF');
+        // Comandos: avanzar 2 veces, girar a la derecha, avanzar 2 veces
+        $commands = ['M', 'M', 'R', 'M', 'M'];
 
-        $this->assertEquals('ok', $result['status']);
-        $this->assertEquals(2, $result['x']);
-        $this->assertEquals(2, $result['y']);
-        $this->assertEquals('E', $result['direction']);
+        foreach ($commands as $command) {
+            $rover->move($command, $grid);
+        }
+
+        $position = $rover->getPosition();
+
+        $this->assertEquals(2, $position['x']);
+        $this->assertEquals(2, $position['y']);
+        $this->assertEquals('E', $position['orientation']);
     }
 
     public function testObstacleStopsMovement()
     {
-        $grid = new Grid(200, 200, [['x' => 0, 'y' => 2]]);
-        $rover = new Rover(0, 0, 'N', $grid);
+        // Grilla con un obstáculo virtual: posición (0, 2) no es válida
+        $grid = new class(5, 5) extends Grid {
+            public function isPositionValid($x, $y) {
+                return !($x === 0 && $y === 2) && parent::isPositionValid($x, $y);
+            }
+        };
 
-        $result = $rover->executeCommands('FFF');
+        $rover = new Rover(0, 0, 'N');
 
-        $this->assertEquals('obstacle', $result['status']);
-        $this->assertEquals(0, $result['x']);
-        $this->assertEquals(1, $result['y']);
+        // Comandos: intentar avanzar 3 veces hacia el Norte
+        $commands = ['M', 'M', 'M'];
+        foreach ($commands as $command) {
+            try {
+                $rover->move($command, $grid);
+            } catch (\Exception $e) {
+                break; // Detenemos si hay excepción
+            }
+        }
+
+        $position = $rover->getPosition();
+
+        // El rover debe haberse detenido en (0, 1)
+        $this->assertEquals(0, $position['x']);
+        $this->assertEquals(1, $position['y']);
+        $this->assertEquals('N', $position['orientation']);
     }
 }
