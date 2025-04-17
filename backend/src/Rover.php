@@ -1,23 +1,46 @@
 <?php
 
+// Se declara el namespace para organización del código
 namespace App;
 
+/**
+ * Clase Rover
+ * 
+ * Representa un vehículo explorador (rover) que puede moverse sobre una grilla en las direcciones
+ * cardinales Norte, Sur, Este y Oeste.
+ */
 class Rover {
+    // Propiedades privadas que definen la posición actual y la orientación del rover
     private $x;
     private $y;
     private $orientation;
 
-    // Orientación: Norte (N), Este (E), Sur (S), Oeste (W)
+    /**
+     * Constructor del rover
+     * 
+     * @param int $x           Posición horizontal inicial (columna)
+     * @param int $y           Posición vertical inicial (fila)
+     * @param string $orientation Dirección inicial del rover: 'N', 'E', 'S', 'W'
+     */
     public function __construct($x = 0, $y = 0, $orientation = 'N') {
         $this->x = $x;
         $this->y = $y;
         $this->orientation = $orientation;
     }
 
-    // Método para mover el rover
+    /**
+     * Ejecuta un movimiento basado en el comando recibido.
+     * 
+     * @param string $direction Comando de movimiento: 
+     *                          'M' para avanzar, 
+     *                          'L' para girar a la izquierda,
+     *                          'R' para girar a la derecha.
+     * @param Grid $grid Objeto Grid para validar los límites del mapa.
+     * @throws \Exception Si el movimiento resulta en una posición fuera del grid.
+     */
     public function move($direction, $grid) {
         switch ($direction) {
-            case 'M': // Mover adelante
+            case 'M': // Moverse hacia adelante según orientación actual
                 $this->moveForward($grid);
                 break;
             case 'L': // Girar a la izquierda
@@ -28,43 +51,67 @@ class Rover {
                 break;
         }
 
-        // Verifica que la nueva posición sea válida
+        // Validación final: si la nueva posición es inválida, lanzar excepción
         if (!$grid->isPositionValid($this->x, $this->y)) {
             throw new \Exception("Posición fuera de los límites del mapa");
         }
     }
 
-    // Método para mover hacia adelante
+    /**
+     * Mueve el rover hacia adelante según su orientación actual.
+     * Si el movimiento lo saca de la grilla, se restaura la posición anterior.
+     * 
+     * @param Grid $grid Objeto Grid para validación de posición.
+     */
     private function moveForward($grid) {
-        // Guardar la posición anterior para restaurarla si la nueva posición es inválida
+        // Guardamos la posición actual en caso de necesitar revertir
         $prevX = $this->x;
         $prevY = $this->y;
+
+        // Avanza en la dirección actual
         switch ($this->orientation) {
             case 'N': $this->y++; break;
             case 'S': $this->y--; break;
             case 'E': $this->x++; break;
             case 'W': $this->x--; break;
         }
-       
-        // Verifica si la nueva posición es válida
+
+        // Si la nueva posición no es válida, revertimos
         if (!$grid->isPositionValid($this->x, $this->y)) {
-            echo json_decode("entro");
-            // Restaurar la posición anterior si la nueva es inválida
+            // Restauramos la posición original
             $this->x = $prevX;
             $this->y = $prevY;
         }
     }
 
+    /**
+     * Gira el rover 90 grados a la izquierda
+     */
     private function turnLeft() {
-        $this->orientation = $this->orientation === 'N' ? 'W' : ($this->orientation === 'W' ? 'S' : ($this->orientation === 'S' ? 'E' : 'N'));
+        $this->orientation = $this->orientation === 'N' ? 'W' :
+                             ($this->orientation === 'W' ? 'S' :
+                             ($this->orientation === 'S' ? 'E' : 'N'));
     }
 
+    /**
+     * Gira el rover 90 grados a la derecha
+     */
     private function turnRight() {
-        $this->orientation = $this->orientation === 'N' ? 'E' : ($this->orientation === 'E' ? 'S' : ($this->orientation === 'S' ? 'W' : 'N'));
+        $this->orientation = $this->orientation === 'N' ? 'E' :
+                             ($this->orientation === 'E' ? 'S' :
+                             ($this->orientation === 'S' ? 'W' : 'N'));
     }
 
+    /**
+     * Retorna la posición actual del rover junto con su orientación.
+     * 
+     * @return array ['x' => int, 'y' => int, 'orientation' => string]
+     */
     public function getPosition() {
-        return ['x' => $this->x, 'y' => $this->y, 'orientation' => $this->orientation];
+        return [
+            'x' => $this->x,
+            'y' => $this->y,
+            'orientation' => $this->orientation
+        ];
     }
 }
-
