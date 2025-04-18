@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     nginx \
+    supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 # ======================
@@ -37,6 +38,8 @@ COPY . /var/www/
 # ======================
 # Copia el archivo de configuración de NGINX al contenedor
 COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
+# Copia el archivo de configuración para supervisord
+COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # ======================
 # Exponer el puerto 80
@@ -47,4 +50,4 @@ EXPOSE 80
 # Comando por defecto al iniciar el contenedor
 # ======================
 # Inicializa NGINX y PHP-FPM al mismo tiempo
-CMD service nginx start && php-fpm
+CMD ["/usr/bin/supervisord"]
