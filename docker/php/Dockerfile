@@ -36,7 +36,7 @@ COPY . /var/www/
 # Configuración de NGINX
 # ======================
 # Copia el archivo de configuración de NGINX al contenedor
-COPY ./docker/ngnix/default.conf /etc/nginx/sites-available/default
+COPY ./docker/nginx/default.conf /etc/nginx/sites-available/default
 
 # ======================
 # Exponer el puerto 80
