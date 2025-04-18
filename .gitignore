@@ -10,9 +10,6 @@ vendor/
 # Subir el archivo de ejemplo de entorno
 !.env.example
 
-# Configuración del servidor web (si no es necesario)
-.htaccess
-
 # Archivos de configuración del editor (Visual Studio Code y otros IDEs)
 .vscode/
 .idea/

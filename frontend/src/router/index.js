@@ -10,7 +10,7 @@ const routes = [
     }
 ];
 
-// Crea el objeto router utilizando la historia del navegador
+// Crea el objeto router
 const router = createRouter({
     // Usa la variable de entorno VITE_BASE_URL para establecer la base URL de la aplicación
     history: createWebHistory(import.meta.env.VITE_BASE_URL),

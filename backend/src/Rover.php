@@ -1,13 +1,12 @@
 <?php
 
-// Se declara el namespace para organización del código
 namespace App;
 
 /**
  * Clase Rover
  * 
- * Representa un vehículo explorador (rover) que puede moverse sobre una grilla en las direcciones
- * cardinales Norte, Sur, Este y Oeste.
+ * Representa un vehículo (rover) que puede moverse sobre un grid en las direcciones (x, y)
+ * en las coordenadas Norte, Sur, Este y Oeste.
  */
 class Rover {
     // Propiedades privadas que definen la posición actual y la orientación del rover
@@ -59,7 +58,7 @@ class Rover {
 
     /**
      * Mueve el rover hacia adelante según su orientación actual.
-     * Si el movimiento lo saca de la grilla, se restaura la posición anterior.
+     * Si el movimiento lo saca del grid, se restaura la posición anterior.
      * 
      * @param Grid $grid Objeto Grid para validación de posición.
      */
@@ -88,9 +87,22 @@ class Rover {
      * Gira el rover 90 grados a la izquierda
      */
     private function turnLeft() {
+        # Formato ternario
         $this->orientation = $this->orientation === 'N' ? 'W' :
                              ($this->orientation === 'W' ? 'S' :
                              ($this->orientation === 'S' ? 'E' : 'N'));
+
+        /*
+            if ($this->orientation === 'N') {
+                $this->orientation = 'W';
+            } elseif ($this->orientation === 'W') {
+                $this->orientation = 'S';
+            } elseif ($this->orientation === 'S') {
+                $this->orientation = 'E';
+            } else {
+                $this->orientation = 'N';
+            }
+        */
     }
 
     /**
@@ -103,7 +115,7 @@ class Rover {
     }
 
     /**
-     * Retorna la posición actual del rover junto con su orientación.
+     * Devuelve la posición actual del rover junto con su orientación.
      * 
      * @return array ['x' => int, 'y' => int, 'orientation' => string]
      */

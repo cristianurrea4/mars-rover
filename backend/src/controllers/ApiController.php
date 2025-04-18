@@ -27,12 +27,12 @@ class ApiController {
     public function moveRover($direction) {
         $grid = new Grid(); // Se crea una grilla de 5x5 (por defecto)
 
-        // Si ya hay una posición guardada en sesión, se crea el rover con esa posición
+        // Si ya hay una posición guardada en sesión, se crea el rover con esa posición, usame isset() "esta definida y no es null"
         if (isset($_SESSION['rover'])) {
             $roverData = $_SESSION['rover'];
             $rover = new Rover($roverData['x'], $roverData['y'], $roverData['orientation']);
         } else {
-            // Si no existe una posición previa, se inicializa el rover en la posición (0, 0) mirando al norte
+            // Si no existe una posición previa, se inicializa el rover en la posición (0, 0, N) orientado al norte
             $rover = new Rover(); 
         }
 
@@ -60,7 +60,7 @@ class ApiController {
     public function getRoverPosition() {
         // Si hay una posición guardada en la sesión, se devuelve
         if (isset($_SESSION['rover'])) {
-            return $_SESSION['rover'];
+            return $_SESSION['rover']; # Podemos verificar la posicion a travez de la consola del navegador en netword->response
         } else {
             // Si no, se devuelve la posición inicial por defecto
             return (new Rover())->getPosition();

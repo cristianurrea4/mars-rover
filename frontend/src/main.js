@@ -1,5 +1,3 @@
-// frontend/src/main.js
-
 // Importamos la función createApp de Vue para crear nuestra aplicación
 import { createApp } from 'vue';
 

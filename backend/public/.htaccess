@@ -1,0 +1,31 @@
+##############################################
+# .htaccess — Reescritura para backend PHP
+# --------------------------------------------
+# Este archivo permite que las URLs "bonitas" 
+# (sin .php ni rutas físicas) funcionen 
+# correctamente en Apache redirigiendo todo 
+# hacia index.php, que actúa como router.
+#
+# Ejemplo: /rover/move?command=LEFT 
+#          se redirige internamente a:
+#          /index.php?command=LEFT
+#          El archivo index.php luego maneja 
+#          la lógica basada en ese parámetro.
+###############################################
+
+# Activa el motor de reescritura de URLs
+RewriteEngine On
+
+# Define la base para las rutas reescritas
+RewriteBase /MarsRover/backend/public/
+
+# Si el archivo no existe físicamente...
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# ...y si no es un directorio...
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Entonces redirige todo hacia index.php
+# QSA (Query String Append): conserva los parámetros de la URL
+# L (Last): detiene otras reglas si esta se aplica
+RewriteRule ^ index.php [QSA,L]

@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .home-container {
+    background-color: #000;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .rover-btn {
+    background: #1a1a1a;
+    color: #fff;
+    border: 2px solid #00ff99;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px #00ff99;
+  }
+  
+  .rover-btn:hover {
+    background-color: #00ff99;
+    color: #000;
+    box-shadow: 0 0 30px #00ff99;
+  }
+  

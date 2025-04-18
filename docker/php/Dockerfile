@@ -5,11 +5,11 @@ FROM php:8.2-fpm
 # Instalación de dependencias del sistema
 # ======================
 # Actualiza el índice de paquetes e instala utilidades necesarias
-# zip/unzip para empaquetado, git para control de versiones, curl para descargas
-# Instala extensiones PHP necesarias para trabajar con bases de datos MySQL
-RUN apt-get update && apt-get install -y \  
-    zip unzip git curl \                   
-    && docker-php-ext-install pdo pdo_mysql 
+# zip/unzip para empaquetado, curl para descargas
+
+    RUN apt-get update && apt-get install -y \
+    curl \
+    unzip
 
 # ======================
 # Instalación de Composer
