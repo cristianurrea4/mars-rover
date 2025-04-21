@@ -110,8 +110,7 @@ docker compose down
 - **App.vue**: Componente raíz de la aplicación.
 - **RoverControl.vue**: Componente para controlar el rover (mover, girar y ver la posición).
 - **router/index.js**: Configuración de rutas para el frontend (Vue Router).
-- **api.js**: Configuración de la API utilizando **Axios** para las peticiones HTTP hacia el backend.
-
+  
 ### **Docker**
 
 - **Dockerfile**: Define el contenedor de backend PHP.
@@ -155,7 +154,11 @@ Este proyecto utiliza **PHPUnit** para las pruebas del backend. Puedes ejecutar 
 ```bash
 docker exec -it <container_id> php ./vendor/bin/phpunit
 ```
+Listado de los contenedores:
 
+```bash
+docker ps
+```
 ## Autor
 
 Este proyecto fue desarrollado como parte de una prueba técnica.
